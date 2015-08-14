@@ -84,7 +84,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>众所周知，Android中的动画发展以3.0为分界分为两个阶段。3.0 之前，android支持两种动画模式，tween animation, frame animation, 在android3.0中又引入了一个新的动画系统：property animation.可通过NineOldAndroids项目在3.0之前的系统中使用Property Animation.本篇将主要整理了一下view animation 的定义和使用。</p>
-<h2 id="Tween_Animation">Tween Animation</h2><p>补间动画，给出两个关键帧，通过一些算法将给定属性值在给定的时间内在两个关键帧间渐变。<br>这种动画只能应用于View对象，就是一系列View形状的变换，(主要有4种效果：缩放，平移，透明度渐变，旋转)动画的定义既可以用代码定义也可以用XML定义，当然，建议用XML定义。</p>
+<h2 id="Tween_Animation">Tween Animation</h2><p>补间动画，给出两个关键帧，通过一些算法将给定属性值在给定的时间内在两个关键帧间渐变。这种动画只能应用于View对象，就是一系列View形状的变换，(主要有4种效果：缩放，平移，透明度渐变，旋转)动画的定义既可以用代码定义也可以用XML定义，当然，建议用XML定义。</p>
 <p>两种方式的比较：</p>
 <table>
 <thead>
@@ -118,9 +118,8 @@
 </tbody>
 </table>
 <p><strong>在xml中的定义方式</strong></p>
-<ol>
-<li>在res目录中新建anim文件夹<br>2.在anim目录中新建一个根标签为test_anim.xml(注意文件名小写)</li>
-</ol>
+<p>1.在res目录中新建anim文件夹</p>
+<p>2.在anim目录中新建一个根标签为test_anim.xml(注意文件名小写)</p>
 <pre><code>    <span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>  
     <span class="tag">&lt;<span class="title">set</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>  
     <span class="attribute">android:interpolator</span>=<span class="value">"@[package:]anim/interpolator_resource"</span>  
