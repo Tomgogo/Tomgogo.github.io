@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Code the world</title>
+  <title>Android Animation--View animation | Code the world</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Code the world">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="众所周知，Android中的动画发展以3.0为分界分为两个阶段。3.0 之前，android支持两种动画模式，tween animation, frame animation, 在android3.0中又引入了一个新的动画系统：property animation.可通过NineOldAndroids项目在3.0之前的系统中使用Property Animation.本篇将主要整理了一下view a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Animation--View animation">
+<meta property="og:url" content="http://yoursite.com/2015/08/14/View-animation/index.html">
 <meta property="og:site_name" content="Code the world">
-<meta property="og:description">
+<meta property="og:description" content="众所周知，Android中的动画发展以3.0为分界分为两个阶段。3.0 之前，android支持两种动画模式，tween animation, frame animation, 在android3.0中又引入了一个新的动画系统：property animation.可通过NineOldAndroids项目在3.0之前的系统中使用Property Animation.本篇将主要整理了一下view a">
+<meta property="og:updated_time" content="2015-08-14T08:00:13.946Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Code the world">
-<meta name="twitter:description">
+<meta name="twitter:title" content="Android Animation--View animation">
+<meta name="twitter:description" content="众所周知，Android中的动画发展以3.0为分界分为两个阶段。3.0 之前，android支持两种动画模式，tween animation, frame animation, 在android3.0中又引入了一个新的动画系统：property animation.可通过NineOldAndroids项目在3.0之前的系统中使用Property Animation.本篇将主要整理了一下view a">
   
     <link rel="alternative" href="/atom.xml" title="Code the world" type="application/atom+xml">
   
@@ -59,9 +60,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-View-animation" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-View-animation" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/08/14/View-animation/" class="article-date">
   <time datetime="2015-08-14T07:58:43.000Z" itemprop="datePublished">2015-08-14</time>
@@ -74,8 +73,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/14/View-animation/">Android Animation--View animation</a>
+    <h1 class="article-title" itemprop="name">
+      Android Animation--View animation
     </h1>
   
 
@@ -185,354 +184,20 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-Test-post" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/08/13/Test-post/" class="article-date">
-  <time datetime="2015-08-13T11:07:43.000Z" itemprop="datePublished">2015-08-13</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Blog/">Blog</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/13/Test-post/">Test</a>
-    </h1>
+    <a href="/2015/08/13/Test-post/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Test</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>#####Gradle 常用命令</p>
-<pre><code>./gradlew -v 版本号
-
-./gradlew clean 清除项目（module）目录下的build文件夹
-
-./gradlew build 检查依赖并编译打包
-
-（以上命令需要到项目的根目录下执行，Windows系统上如果执行不了以上命令，用gradlew.bat 代替gradlew）
-
-./gradlew assembleDebug 编译并打<span class="keyword">Debug</span>包
-
-./gradlew assembleRelease 编译并打<span class="keyword">Release</span>的包
-
-除此之外，assemble还可以和productFlavors结合使用，具体在下一篇多渠道打包进一步解释。
-
-./gradlew installRelease <span class="keyword">Release</span>模式打包并安装
-
-./gradlew uninstallRelease 卸载<span class="keyword">Release</span>模式包
-</code></pre><pre><code>apply plugin: 'android'
-//添加依赖包
-dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')//添加libs文件夹下的所有jar包
-    compile project(':appcompat_v7') //这里添加其他依赖，可以是本地、远程的库，例如本地libraries/support_v7的库
-}
-
-//下面一段是将libs/*/*.so文件加入打包
-//如果你的项目是使用Eclipse+ADT建立的，则需要这段代码
-//task copyNativeLibs(type: Copy) {
-//    from(new File('libs')) { include '**/*.so' }
-  //  into new File(buildDir, 'native-libs')
-//}
-
-android {
-//下面两行是编译sdk版本和buildTool的版本
-    compileSdkVersion 21
-    buildToolsVersion "21.1.0"
-
-    //以下是签名信息
-    signingConfigs {
-        myConfigs {
-            storeFile file("new.keystore")
-            keyAlias "new.keystore"
-            keyPassword "111111"
-            storePassword "111111"
-        }
-    }
-
-    buildTypes{
-        release {
-            minifyEnabled true//打包时过滤掉没有用到的代码
-            shrinkResources true//打包时过滤掉没有用到的资源文件
-            signingConfig signingConfigs.myConfigs
-        }
-    }
-   　//Gradle编译禁用Lint报错
-    lintOptions {
-        abortOnError false
-    }
-
-        /**
-         * 渠道打包（不同包名）
-         */
-        productFlavors {
-            a {
-                applicationId = 'com.demo.yinyongbao'
-                manifestPlaceholders = [installChanel:"应用宝"]
-            }
-            b {
-                applicationId='com.demo.wandoujia'
-                manifestPlaceholders = [installChanel: "豌豆荚"]
-            }
-        }
-    productFlavors.all { flavor ->
-        flavor.manifestPlaceholders = [installChanel: name]
-    }
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-        }
-
-        // Move the tests to tests/java, tests/res, etc...
-        instrumentTest.setRoot('tests')
-
-        // Move the build types to build-types/<type>
-        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
-        // This moves them out of them default location under src/<type>/... which would
-        // conflict with src/ being used by the main source set.
-        // Adding new build types or product flavors should be accompanied
-        // by a similar customization.
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
-    }
-}</type></type></code></pre>
-
-<p>Manifest 文件里面写上(以友盟统计为例)</p>
-<p><code>&lt;meta-data
-            android:name=&quot;InstallChannel&quot;
-            android:value=&quot;${installChanel}&quot;/&gt;</code></p>
-<pre><code>这样就可以进到项目的根目录，执行 gradlew clean 和gradlew build
-如果上面的脚本可以被正常执行gradlew build 将会生成下面<span class="number">8</span>个apk包 
-Demo-a-debug<span class="class">.apk</span> Demo-a-debug-unaligned<span class="class">.apk</span> Demo-a-release<span class="class">.apk</span> 
-Demo-a-release-unaligned<span class="class">.apk</span> Demo-b-debug<span class="class">.apk</span> Demo-b-debug-unaligned<span class="class">.apk</span>
-Demo-b-release<span class="class">.apk</span> Demo-b-release-unaligned<span class="class">.apk</span>
-
-我们也可以执行 gradlew <span class="function"><span class="title">assemBRelease</span><span class="params">(可简写gradlew assemBR)</span></span> 将会生成两个apk包
-Demo-b-release<span class="class">.apk</span>  Demo-b-release-unaligned.apk
-</code></pre><p>build.gradle 还有其他写法</p>
-<pre><code>apply plugin: 'com.android.application'
-
-def releaseTime() {
-    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
-}
-
-android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.2'
-
-    defaultConfig {
-        applicationId "com.boohee.*"
-        minSdkVersion 14
-        targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
-
-        // dex突破65535的限制
-        multiDexEnabled true
-        // 默认是umeng的渠道
-        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "umeng"]
-    }
-
-    lintOptions {
-        abortOnError false
-    }
-
-    signingConfigs {
-        debug {
-            // No debug config
-        }
-
-        release {
-            storeFile file("../yourapp.keystore")
-            storePassword "your password"
-            keyAlias "your alias"
-            keyPassword "your password"
-        }
-    }
-
-    buildTypes {
-        debug {
-            // 显示Log
-            buildConfigField "boolean", "LOG_DEBUG", "true"
-
-            versionNameSuffix "-debug"
-            minifyEnabled false
-            zipAlignEnabled false
-            shrinkResources false
-            signingConfig signingConfigs.debug
-        }
-
-        release {
-            // 不显示Log
-            buildConfigField "boolean", "LOG_DEBUG", "false"
-
-            minifyEnabled true
-            zipAlignEnabled true
-            // 移除无用的resource文件
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-
-            applicationVariants.all { variant ->
-                variant.outputs.each { output ->
-                    def outputFile = output.outputFile
-                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                        // 输出apk名称为boohee_v1.0_2015-01-15_wandoujia.apk
-                        def fileName = "boohee_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
-                        output.outputFile = new File(outputFile.parent, fileName)
-                    }
-                }
-            }
-        }
-    }
-
-    // 友盟多渠道打包
-    productFlavors {
-        wandoujia {}
-        _360 {}
-        baidu {}
-        xiaomi {}
-        tencent {}
-        taobao {}
-        ...
-    }
-
-    productFlavors.all { flavor ->
-        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-    }
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:21.0.3'
-    compile 'com.jakewharton:butterknife:6.0.0'
-    ...
-}</code></pre>
-
-<p>Manifest 文件里配置</p>
-<p><code>&lt;meta-data
-    android:name=&quot;UMENG_CHANNEL&quot;
-    android:value=&quot;${UMENG_CHANNEL_VALUE}&quot; /&gt;</code></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/08/13/Test-post/" data-id="cidbciv940000qsb1tgc8cj7m" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
 
-
-  
-    <article id="post-new-post" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/08/13/new-post/" class="article-date">
-  <time datetime="2015-08-13T07:59:43.000Z" itemprop="datePublished">2015-08-13</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Blog/">Blog</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/13/new-post/">使用Hexo搭建个人博客</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/08/13/new-post/" data-id="cidbcivdu0003qsb1bqrhsk9p" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/08/13/hello-world/" class="article-date">
-  <time datetime="2015-08-13T04:57:39.920Z" itemprop="datePublished">2015-08-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/13/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/08/13/hello-world/" data-id="cidbcivdu0007qsb1qrr9if6x" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-  
 </section>
         
           <aside id="sidebar">
