@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://yoursite.com/2015/08/14/View-animation/index.html">
 <meta property="og:site_name" content="Code the world">
 <meta property="og:description" content="众所周知，Android中的动画发展以3.0为分界分为两个阶段。3.0 之前，android支持两种动画模式，tween animation, frame animation, 在android3.0中又引入了一个新的动画系统：property animation.可通过NineOldAndroids项目在3.0之前的系统中使用Property Animation.本篇将主要整理了一下view a">
-<meta property="og:updated_time" content="2015-08-14T08:07:51.562Z">
+<meta property="og:updated_time" content="2015-08-14T08:14:36.644Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android Animation--View animation">
 <meta name="twitter:description" content="众所周知，Android中的动画发展以3.0为分界分为两个阶段。3.0 之前，android支持两种动画模式，tween animation, frame animation, 在android3.0中又引入了一个新的动画系统：property animation.可通过NineOldAndroids项目在3.0之前的系统中使用Property Animation.本篇将主要整理了一下view a">
@@ -174,6 +174,13 @@
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;animation-list <span class="string">xmlns:</span>android=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line"><span class="label">    android:</span>oneshot=<span class="string">"true"</span>&gt;</span><br><span class="line">    &lt;item <span class="string">android:</span>drawable=<span class="string">"@drawable/drawable1"</span> <span class="string">android:</span>duration=<span class="string">"200"</span> /&gt;</span><br><span class="line">    &lt;item <span class="string">android:</span>drawable=<span class="string">"@drawable/drawable2"</span> <span class="string">android:</span>duration=<span class="string">"200"</span> /&gt;</span><br><span class="line">    &lt;item <span class="string">android:</span>drawable=<span class="string">"@drawable/drawable3"</span> <span class="string">android:</span>duration=<span class="string">"200"</span> /&gt;</span><br><span class="line">    &lt;item <span class="string">android:</span>drawable=<span class="string">"@drawable/drawable4"</span> <span class="string">android:</span>duration=<span class="string">"200"</span> /&gt;</span><br><span class="line">    &lt;item <span class="string">android:</span>drawable=<span class="string">"@drawable/drawable5"</span> <span class="string">android:</span>duration=<span class="string">"200"</span> /&gt;</span><br><span class="line">&lt;/animation-list&gt;</span><br></pre></td></tr></table></figure>
 <p>注：必须以<animation-list>为根元素，以<item>表示要轮换显示的图片，duration属性表示各项显示的时间。XML文件放在/res/drawable/目录下。属性：android:oneshot ：true：只执行一次动画，false：循环执行。</item></animation-list></p>
 <figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ImageView image = <span class="params">(ImageView)</span> findViewById<span class="params">(R.id.image)</span>;  </span><br><span class="line">image.setBackgroundResource<span class="params">(R.drawable_frame_anim)</span>;  </span><br><span class="line">frameAnim = <span class="params">(AnimationDrawable)</span> image.getBackground<span class="params">()</span>;  </span><br><span class="line">frameAnim.start<span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+<p>在实际使用时要注意：</p>
+<ol>
+<li>要在代码中调用Imageview的setBackgroundResource方法，如果直接在XML布局文件中设置其src属性当触发动画时会FC。</li>
+<li>在动画start()之前要先stop()，不然在第一次动画之后会停在最后一帧，这样动画就只会触发一次。</li>
+<li>最后一点是SDK中提到的，不要在onCreate中调用start，因为AnimationDrawable还没有完全跟Window相关联，如果想要界面显示时就开始动画的话，可以在onWindowFoucsChanged()中调用start()。</li>
+</ol>
+
       
     </div>
     <footer class="article-footer">
