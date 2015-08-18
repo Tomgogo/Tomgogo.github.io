@@ -61,6 +61,106 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Property-animation" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/08/17/Property-animation/" class="article-date">
+  <time datetime="2015-08-17T14:58:43.000Z" itemprop="datePublished">2015-08-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/17/Property-animation/">Android Animation--Property Animation</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>属性动画，这个是在Android 3.0中才引进的，与view animation 最大的不同就是，它更改的是对象的实际属性，而View Animation（Tween Animation）中，其改变的是View的绘制效果，真正的View的属性保持不变，比如无论你在对话中如何缩放Button的大小，Button的有效点击区域还是没有应用动画时的区域，其位置与大小都不变。而在Property Animation中，改变的是对象的实际属性，如Button的缩放，Button的位置与大小属性值都改变了。而且Property Animation不止可以应用于View，还可以应用于任何对象。Property Animation只是表示一个值在一段时间内的改变，当值改变时要做什么事情完全是你自己决定的。</p>
+<p>在Property Animation中，可以对动画应用以下属性：</p>
+<p>Duration：动画的持续时间<br>TimeInterpolation：属性值的计算方式，如先快后慢<br>TypeEvaluator：根据属性的开始、结束值与TimeInterpolation计算出的因子计算出当前时间的属性值<br>Repeat Count and behavoir：重复次数与方式，如播放3次、5次、无限循环，可以此动画一直重复，或播放完时再反向播放<br>Animation sets：动画集合，即可以同时对一个对象应用几个动画，这些动画可以同时播放也可以对不同动画设置不同开始偏移<br>Frame refreash delay：多少时间刷新一次，即每隔多少时间计算一次属性值，默认为10ms，最终刷新时间还受系统进程调度与硬件的影响</p>
+<h2 id="ValueAnimator">ValueAnimator</h2><p>ValueAnimator  表示一个动画，包含动画的开始值，结束值，持续时间等属性。<br>ValueAnimator封装了一个TimeInterpolator，TimeInterpolator定义了属性值在开始值与结束值之间的插值方法。<br>ValueAnimator还封装了一个TypeAnimator，根据开始、结束值与TimeIniterpolator计算得到的值计算出属性值。<br>ValueAnimator的父类和子类如图：<br><img src="../img/value-animator.png" alt="value-anim">{ImgCap}value-animator.png{/ImgCap}<br>ValuAnimiator只完成了第一步工作，如果要完成第二步，需要实现ValueAnimator.onUpdateListener接口，这个接口只有一个函数onAnimationUpdate()，在这个函数中会传入ValueAnimator对象做为参数，通过这个ValueAnimator对象的getAnimatedValue()函数可以得到当前的属性值如：</p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ValueAnimator animation = ValueAnimator.ofFloat<span class="params">(<span class="number">0</span>f, <span class="number">1</span>f)</span>;</span><br><span class="line">animation.setDuration<span class="params">(<span class="number">1000</span>)</span>;</span><br><span class="line">animation.addUpdateListener<span class="params">(new AnimatorUpdateListener<span class="params">()</span> &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void onAnimationUpdate<span class="params">(ValueAnimator animation)</span> &#123;</span><br><span class="line">        Log.i<span class="params">(<span class="string">"update"</span>, <span class="params">(<span class="params">(Float)</span> animation.getAnimatedValue<span class="params">()</span>)</span>.toString<span class="params">()</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span>;</span><br><span class="line">animation.setInterpolator<span class="params">(new CycleInterpolator<span class="params">(<span class="number">3</span>)</span>)</span>;</span><br><span class="line">animation.start<span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+<p>对于下图的动画，这个对象的X坐标在40ms内从0移动到40 pixel.按默认的10ms刷新一次，这个对象会移动4次，每次移动40/4=10pixel。</p>
+<p><img src="../img/animation-linear.png" alt="animation1"></p>
+<p>也可以改变属性值的改变方法，即设置不同的interpolation，在下图中运动速度先逐渐增大再逐渐减小<br><img src="../img/animation-nonlinear.png" alt="animation2"></p>
+<ul>
+<li><p>Animator.AnimatorListener</p>
+<ul>
+<li>onAnimationStart() - 动画开始时调用</li>
+<li>onAnimationEnd() - 动画结束时调用</li>
+<li>onAnimationRepeat() - 动画重复时调用</li>
+<li>onAnimationCancel() -  动画被取消时调用，同时会调用onAnimationEnd（）</li>
+</ul>
+</li>
+<li><p>ValueAnimator.AnimatorUpdateListener</p>
+<ul>
+<li>onAnimationUpdate() -绘制动画的每一帧都会被调用</li>
+</ul>
+</li>
+</ul>
+<p>有时我们没有必要实现AnimatorListener 接口，可以用适配器类 AnimatorListenerAdapter代替有时我们没有必要实现AnimatorListener 只实现你想要的方法。</p>
+<h2 id="ObjectAnimator">ObjectAnimator</h2><p>   ValueAnimator的子类，要指定一个对象及该对象的一个属性，当属性值计算完成时自动设置为该对象的相应属性，即完成了Property Animation的全部两步操作。实际应用中一般都会用ObjectAnimator来改变某一对象的某一属性，但用ObjectAnimator有一定的限制，要想使用ObjectAnimator，应该满足以下条件：</p>
+<ul>
+<li>对象应该有一个setter函数：set<propertyname>（驼峰命名法）</propertyname></li>
+<li>如上面的例子中，像ofFloat之类的工场方法，第一个参数为对象名，第二个为属性名，后面的参数为可变参数，如果values…参数只设置了一个值的话，那么会假定为目的值，属性值的变化范围为当前值到目的值，为了获得当前值，该对象要有相应属性的getter方法：get<propertyname></propertyname></li>
+<li>如果有getter方法，其应返回值类型应与相应的setter方法的参数类型一致。<br>如果上述条件不满足，则不能用ObjectAnimator，应用ValueAnimator代替。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ObjectAnimator oa=ObjectAnimator.ofFloat(tv, <span class="string">"alpha"</span>, <span class="number">0f</span>, <span class="number">1f</span>);</span><br><span class="line">　	  oa.setDuration(<span class="number">5000</span>); </span><br><span class="line">   oa.start();</span><br></pre></td></tr></table></figure>
+<p>上面这段代码就是让textview的alpha属性从0f在5s内变化到1f ，即从完全不可见到完全可见。</p>
+<p>常用的属性有：alpha，translationX，translationY，translationZ，rotation，rotationX，scaleX,scaleY…</p>
+<h3 id="AnimatorSet">AnimatorSet</h3><p>AnimationSet提供了一个把多个动画组合成一个组合的机制，并可设置组中动画的时序关系，如同时播放，顺序播放等。</p>
+<p>实现组合动画功能主要需要借助AnimatorSet这个类，这个类提供了一个play()方法，如果我们向这个方法中传入一个Animator对象(ValueAnimator或ObjectAnimator)将会返回一个AnimatorSet.Builder的实例，AnimatorSet.Builder中包括以下四个方法：</p>
+<ul>
+<li>after(Animator anim)   将现有动画插入到传入的动画之后执行</li>
+<li>after(long delay)   将现有动画延迟指定毫秒后执行</li>
+<li>before(Animator anim)   将现有动画插入到传入的动画之前执行</li>
+<li>with(Animator anim)   将现有动画和传入的动画同时执行</li>
+</ul>
+<p>以下例子同时应用5个动画：</p>
+<ol>
+<li>播放a1；</li>
+<li>同时播放a2,a3,a4；</li>
+<li>播放anim5。</li>
+</ol>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ObjectAnimator a1 = ObjectAnimator.ofFloat<span class="params">(animTextView, <span class="string">"translationX"</span>, -<span class="number">500</span>f, <span class="number">0</span>f)</span>;</span><br><span class="line">ObjectAnimator a2 = ObjectAnimator.ofFloat<span class="params">(animTextView, <span class="string">"rotation"</span>, <span class="number">0</span>f, <span class="number">360</span>f)</span>;</span><br><span class="line">ObjectAnimator a3 = ObjectAnimator.ofFloat<span class="params">(animTextView, <span class="string">"alpha"</span>, <span class="number">1</span>f, <span class="number">0</span>f, <span class="number">1</span>f)</span>;</span><br><span class="line">ObjectAnimator a4 = ObjectAnimator.ofFloat<span class="params">(animTextView, <span class="string">"scaleY"</span>, <span class="number">1</span>f, <span class="number">2</span>f, <span class="number">1</span>f)</span>;</span><br><span class="line">ObjectAnimator a5 = ObjectAnimator.ofFloat<span class="params">(animTextView, <span class="string">"scaleX"</span>, <span class="number">1</span>f, <span class="number">2</span>f)</span>;</span><br><span class="line">AnimatorSet animSet = new AnimatorSet<span class="params">()</span>;</span><br><span class="line">animSet.play<span class="params">(a1)</span>.before<span class="params">(a2)</span>;</span><br><span class="line">animSet.play<span class="params">(a2)</span>.with<span class="params">(a3)</span>;</span><br><span class="line">animSet.play<span class="params">(a2)</span>.with<span class="params">(a4)</span>;</span><br><span class="line">animSet.play<span class="params">(a5)</span>.after<span class="params">(a2)</span>;</span><br><span class="line">animSet.start<span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="TypeEvalutors">TypeEvalutors</h3><p>根据属性的开始、结束值与TimeInterpolation计算出的因子计算出当前时间的属性值，android提供了以下几个evalutor：</p>
+<p>IntEvaluator：属性的值类型为int；<br>FloatEvaluator：属性的值类型为float；<br>ArgbEvaluator：属性的值类型为十六进制颜色值；<br>TypeEvaluator：一个接口，可以通过实现该接口自定义Evaluator。<br>自定义TypeEvalutor很简单，只需要实现一个方法，如FloatEvalutor的定义：<br>ValueAnimator.ofFloat()方法就是实现了初始值与结束值之间的平滑过度，那么这个平滑过度是怎么做到的呢？其实就是系统内置了一个FloatEvaluator，它通过计算告知动画系统如何从初始值过度到结束值</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> FloatEvaluator implements TypeEvaluator &#123;</span><br><span class="line">    <span class="keyword">public</span> Object evaluate(<span class="built_in">float</span> <span class="built_in">fraction</span>, Object startValue, Object endValue) &#123;</span><br><span class="line">        <span class="built_in">float</span> startFloat = ((<span class="keyword">Number</span>) startValue).floatValue();</span><br><span class="line">        <span class="keyword">return</span> startFloat + <span class="built_in">fraction</span> * (((<span class="keyword">Number</span>) endValue).floatValue() - startFloat);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Layout处于不同的改变时应用动画">Layout处于不同的改变时应用动画</h3><p>ViewGroup中的子元素可以通过setVisibility使其Visible、Invisible或Gone，当有子元素可见性改变时(VISIBLE、GONE)，可以向其应用动画，通过LayoutTransition类应用此类动画：</p>
+<p><code>transition.setAnimator(LayoutTransition.DISAPPEARING, customDisappearingAnim);</code><br>通过setAnimator应用动画，第一个参数表示应用的情境，可以以下4种类型：</p>
+<ul>
+<li>APPEARING　　　　　　　　当一个元素在其父元素中变为Visible时对这个元素应用动画</li>
+<li>CHANGE_APPEARING　　　 当一个元素在其父元素中变为Visible时，因系统要重新布局有一些元  素需要移动，对这些要移动的元素应用动画</li>
+<li>DISAPPEARING　　　　　　 当一个元素在其父元素中变为GONE时对其应用动画</li>
+<li>CHANGE_DISAPPEARING　  当一个元素在其父元素中变为GONE时，因系统要重新布局有一些元素需要移动，这些要移动的元素应用动画.<br>第二个参数为一Animator。</li>
+</ul>
+<p><code>mTransitioner.setStagger(LayoutTransition.CHANGE_APPEARING, 30);</code><br>此函数设置动画延迟时间，参数分别为类型与时间。</p>
+<h3 id="ViewPropertyAnimator">ViewPropertyAnimator</h3><p>ViewPropertyAnimator提供了一种简单的方式来为View的部分属性设置动画，使用一个单一的Animator对象。它表现的更像 ObjectAnimator，因为他也要修改View对象的相应的属性值，但是当为多个属性同时设置动画时，它比 ObjectAnimator更高效，下面的代码片段显示了使用多个ObjectAnimator，单个ObjectAnimator，以及ViewPropertyAnimator来同时为View的x,y属性设置动画的情形：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ObjectAnimator animX = ObjectAnimator.ofFloat<span class="params">(myView, <span class="string">"x"</span>, <span class="number">50</span>f)</span>;</span><br><span class="line">ObjectAnimator animY = ObjectAnimator.ofFloat<span class="params">(myView, <span class="string">"y"</span>, <span class="number">100</span>f)</span>;</span><br><span class="line">AnimatorSet animSetXY = new AnimatorSet<span class="params">()</span>;</span><br><span class="line">animSetXY.playTogether<span class="params">(animX, animY)</span>;</span><br><span class="line">animSetXY.start<span class="params">()</span>;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PropertyValuesHolder pvhX = PropertyValuesHolder.ofFloat<span class="params">(<span class="string">"x"</span>, <span class="number">50</span>f)</span>;</span><br><span class="line">PropertyValuesHolder pvhY = PropertyValuesHolder.ofFloat<span class="params">(<span class="string">"y"</span>, <span class="number">100</span>f)</span>;</span><br><span class="line">ObjectAnimator.ofPropertyValuesHolder<span class="params">(myView, pvhX, pvyY)</span>.start<span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">myView</span><span class="class">.animate</span>()<span class="class">.x</span>(50<span class="tag">f</span>)<span class="class">.y</span>(100<span class="tag">f</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>注：Property Animation是在API11（android3.0）引人的，如果想兼容API11之前版本，可以使用 <a href="https://github.com/JakeWharton/NineOldAndroids" target="_blank" rel="external">NineOldAndroids</a> 开源框架。</strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/08/17/Property-animation/" data-id="cidg2sr0d0000xsb1jkqd888c" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-View-animation" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/08/14/View-animation/" class="article-date">
@@ -538,106 +638,6 @@ dependencies {
 
 
   
-    <article id="post-Property-animation" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/08/07/Property-animation/" class="article-date">
-  <time datetime="2015-08-07T14:58:43.000Z" itemprop="datePublished">2015-08-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/07/Property-animation/">Android Animation--Property Animation</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>属性动画，这个是在Android 3.0中才引进的，与view animation 最大的不同就是，它更改的是对象的实际属性，而View Animation（Tween Animation）中，其改变的是View的绘制效果，真正的View的属性保持不变，比如无论你在对话中如何缩放Button的大小，Button的有效点击区域还是没有应用动画时的区域，其位置与大小都不变。而在Property Animation中，改变的是对象的实际属性，如Button的缩放，Button的位置与大小属性值都改变了。而且Property Animation不止可以应用于View，还可以应用于任何对象。Property Animation只是表示一个值在一段时间内的改变，当值改变时要做什么事情完全是你自己决定的。</p>
-<p>在Property Animation中，可以对动画应用以下属性：</p>
-<p>Duration：动画的持续时间<br>TimeInterpolation：属性值的计算方式，如先快后慢<br>TypeEvaluator：根据属性的开始、结束值与TimeInterpolation计算出的因子计算出当前时间的属性值<br>Repeat Count and behavoir：重复次数与方式，如播放3次、5次、无限循环，可以此动画一直重复，或播放完时再反向播放<br>Animation sets：动画集合，即可以同时对一个对象应用几个动画，这些动画可以同时播放也可以对不同动画设置不同开始偏移<br>Frame refreash delay：多少时间刷新一次，即每隔多少时间计算一次属性值，默认为10ms，最终刷新时间还受系统进程调度与硬件的影响</p>
-<h2 id="ValueAnimator">ValueAnimator</h2><p>ValueAnimator  表示一个动画，包含动画的开始值，结束值，持续时间等属性。<br>ValueAnimator封装了一个TimeInterpolator，TimeInterpolator定义了属性值在开始值与结束值之间的插值方法。<br>ValueAnimator还封装了一个TypeAnimator，根据开始、结束值与TimeIniterpolator计算得到的值计算出属性值。<br>ValueAnimator的父类和子类如图：<br><img src="../img/value-animator.png" alt="value-anim"><br>ValuAnimiator只完成了第一步工作，如果要完成第二步，需要实现ValueAnimator.onUpdateListener接口，这个接口只有一个函数onAnimationUpdate()，在这个函数中会传入ValueAnimator对象做为参数，通过这个ValueAnimator对象的getAnimatedValue()函数可以得到当前的属性值如：</p>
-<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ValueAnimator animation = ValueAnimator.ofFloat<span class="params">(<span class="number">0</span>f, <span class="number">1</span>f)</span>;</span><br><span class="line">animation.setDuration<span class="params">(<span class="number">1000</span>)</span>;</span><br><span class="line">animation.addUpdateListener<span class="params">(new AnimatorUpdateListener<span class="params">()</span> &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void onAnimationUpdate<span class="params">(ValueAnimator animation)</span> &#123;</span><br><span class="line">        Log.i<span class="params">(<span class="string">"update"</span>, <span class="params">(<span class="params">(Float)</span> animation.getAnimatedValue<span class="params">()</span>)</span>.toString<span class="params">()</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span>;</span><br><span class="line">animation.setInterpolator<span class="params">(new CycleInterpolator<span class="params">(<span class="number">3</span>)</span>)</span>;</span><br><span class="line">animation.start<span class="params">()</span>;</span><br></pre></td></tr></table></figure>
-<p>对于下图的动画，这个对象的X坐标在40ms内从0移动到40 pixel.按默认的10ms刷新一次，这个对象会移动4次，每次移动40/4=10pixel。</p>
-<p><img src="../img/animation-linear.png" alt="animation1"></p>
-<p>也可以改变属性值的改变方法，即设置不同的interpolation，在下图中运动速度先逐渐增大再逐渐减小<br><img src="../img/animation-nonlinear.png" alt="animation2"></p>
-<ul>
-<li><p>Animator.AnimatorListener</p>
-<ul>
-<li>onAnimationStart() - 动画开始时调用</li>
-<li>onAnimationEnd() - 动画结束时调用</li>
-<li>onAnimationRepeat() - 动画重复时调用</li>
-<li>onAnimationCancel() -  动画被取消时调用，同时会调用onAnimationEnd（）</li>
-</ul>
-</li>
-<li><p>ValueAnimator.AnimatorUpdateListener</p>
-<ul>
-<li>onAnimationUpdate() -绘制动画的每一帧都会被调用</li>
-</ul>
-</li>
-</ul>
-<p>有时我们没有必要实现AnimatorListener 接口，可以用适配器类 AnimatorListenerAdapter代替有时我们没有必要实现AnimatorListener 只实现你想要的方法。</p>
-<h2 id="ObjectAnimator">ObjectAnimator</h2><p>   ValueAnimator的子类，要指定一个对象及该对象的一个属性，当属性值计算完成时自动设置为该对象的相应属性，即完成了Property Animation的全部两步操作。实际应用中一般都会用ObjectAnimator来改变某一对象的某一属性，但用ObjectAnimator有一定的限制，要想使用ObjectAnimator，应该满足以下条件：</p>
-<ul>
-<li>对象应该有一个setter函数：set<propertyname>（驼峰命名法）</propertyname></li>
-<li>如上面的例子中，像ofFloat之类的工场方法，第一个参数为对象名，第二个为属性名，后面的参数为可变参数，如果values…参数只设置了一个值的话，那么会假定为目的值，属性值的变化范围为当前值到目的值，为了获得当前值，该对象要有相应属性的getter方法：get<propertyname></propertyname></li>
-<li>如果有getter方法，其应返回值类型应与相应的setter方法的参数类型一致。<br>如果上述条件不满足，则不能用ObjectAnimator，应用ValueAnimator代替。</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ObjectAnimator oa=ObjectAnimator.ofFloat(tv, <span class="string">"alpha"</span>, <span class="number">0f</span>, <span class="number">1f</span>);</span><br><span class="line">　	  oa.setDuration(<span class="number">5000</span>); </span><br><span class="line">   oa.start();</span><br></pre></td></tr></table></figure>
-<p>上面这段代码就是让textview的alpha属性从0f在5s内变化到1f ，即从完全不可见到完全可见。</p>
-<p>常用的属性有：alpha，translationX，translationY，translationZ，rotation，rotationX，scaleX,scaleY…</p>
-<h3 id="AnimatorSet">AnimatorSet</h3><p>AnimationSet提供了一个把多个动画组合成一个组合的机制，并可设置组中动画的时序关系，如同时播放，顺序播放等。</p>
-<p>实现组合动画功能主要需要借助AnimatorSet这个类，这个类提供了一个play()方法，如果我们向这个方法中传入一个Animator对象(ValueAnimator或ObjectAnimator)将会返回一个AnimatorSet.Builder的实例，AnimatorSet.Builder中包括以下四个方法：</p>
-<ul>
-<li>after(Animator anim)   将现有动画插入到传入的动画之后执行</li>
-<li>after(long delay)   将现有动画延迟指定毫秒后执行</li>
-<li>before(Animator anim)   将现有动画插入到传入的动画之前执行</li>
-<li>with(Animator anim)   将现有动画和传入的动画同时执行</li>
-</ul>
-<p>以下例子同时应用5个动画：</p>
-<ol>
-<li>播放a1；</li>
-<li>同时播放a2,a3,a4；</li>
-<li>播放anim5。</li>
-</ol>
-<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ObjectAnimator a1 = ObjectAnimator.ofFloat<span class="params">(animTextView, <span class="string">"translationX"</span>, -<span class="number">500</span>f, <span class="number">0</span>f)</span>;</span><br><span class="line">ObjectAnimator a2 = ObjectAnimator.ofFloat<span class="params">(animTextView, <span class="string">"rotation"</span>, <span class="number">0</span>f, <span class="number">360</span>f)</span>;</span><br><span class="line">ObjectAnimator a3 = ObjectAnimator.ofFloat<span class="params">(animTextView, <span class="string">"alpha"</span>, <span class="number">1</span>f, <span class="number">0</span>f, <span class="number">1</span>f)</span>;</span><br><span class="line">ObjectAnimator a4 = ObjectAnimator.ofFloat<span class="params">(animTextView, <span class="string">"scaleY"</span>, <span class="number">1</span>f, <span class="number">2</span>f, <span class="number">1</span>f)</span>;</span><br><span class="line">ObjectAnimator a5 = ObjectAnimator.ofFloat<span class="params">(animTextView, <span class="string">"scaleX"</span>, <span class="number">1</span>f, <span class="number">2</span>f)</span>;</span><br><span class="line">AnimatorSet animSet = new AnimatorSet<span class="params">()</span>;</span><br><span class="line">animSet.play<span class="params">(a1)</span>.before<span class="params">(a2)</span>;</span><br><span class="line">animSet.play<span class="params">(a2)</span>.with<span class="params">(a3)</span>;</span><br><span class="line">animSet.play<span class="params">(a2)</span>.with<span class="params">(a4)</span>;</span><br><span class="line">animSet.play<span class="params">(a5)</span>.after<span class="params">(a2)</span>;</span><br><span class="line">animSet.start<span class="params">()</span>;</span><br></pre></td></tr></table></figure>
-<h3 id="TypeEvalutors">TypeEvalutors</h3><p>根据属性的开始、结束值与TimeInterpolation计算出的因子计算出当前时间的属性值，android提供了以下几个evalutor：</p>
-<p>IntEvaluator：属性的值类型为int；<br>FloatEvaluator：属性的值类型为float；<br>ArgbEvaluator：属性的值类型为十六进制颜色值；<br>TypeEvaluator：一个接口，可以通过实现该接口自定义Evaluator。<br>自定义TypeEvalutor很简单，只需要实现一个方法，如FloatEvalutor的定义：<br>ValueAnimator.ofFloat()方法就是实现了初始值与结束值之间的平滑过度，那么这个平滑过度是怎么做到的呢？其实就是系统内置了一个FloatEvaluator，它通过计算告知动画系统如何从初始值过度到结束值</p>
-<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> FloatEvaluator implements TypeEvaluator &#123;</span><br><span class="line">    <span class="keyword">public</span> Object evaluate(<span class="built_in">float</span> <span class="built_in">fraction</span>, Object startValue, Object endValue) &#123;</span><br><span class="line">        <span class="built_in">float</span> startFloat = ((<span class="keyword">Number</span>) startValue).floatValue();</span><br><span class="line">        <span class="keyword">return</span> startFloat + <span class="built_in">fraction</span> * (((<span class="keyword">Number</span>) endValue).floatValue() - startFloat);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Layout处于不同的改变时应用动画">Layout处于不同的改变时应用动画</h3><p>ViewGroup中的子元素可以通过setVisibility使其Visible、Invisible或Gone，当有子元素可见性改变时(VISIBLE、GONE)，可以向其应用动画，通过LayoutTransition类应用此类动画：</p>
-<p><code>transition.setAnimator(LayoutTransition.DISAPPEARING, customDisappearingAnim);</code><br>通过setAnimator应用动画，第一个参数表示应用的情境，可以以下4种类型：</p>
-<ul>
-<li>APPEARING　　　　　　　　当一个元素在其父元素中变为Visible时对这个元素应用动画</li>
-<li>CHANGE_APPEARING　　　 当一个元素在其父元素中变为Visible时，因系统要重新布局有一些元  素需要移动，对这些要移动的元素应用动画</li>
-<li>DISAPPEARING　　　　　　 当一个元素在其父元素中变为GONE时对其应用动画</li>
-<li>CHANGE_DISAPPEARING　  当一个元素在其父元素中变为GONE时，因系统要重新布局有一些元素需要移动，这些要移动的元素应用动画.<br>第二个参数为一Animator。</li>
-</ul>
-<p><code>mTransitioner.setStagger(LayoutTransition.CHANGE_APPEARING, 30);</code><br>此函数设置动画延迟时间，参数分别为类型与时间。</p>
-<h3 id="ViewPropertyAnimator">ViewPropertyAnimator</h3><p>ViewPropertyAnimator提供了一种简单的方式来为View的部分属性设置动画，使用一个单一的Animator对象。它表现的更像 ObjectAnimator，因为他也要修改View对象的相应的属性值，但是当为多个属性同时设置动画时，它比 ObjectAnimator更高效，下面的代码片段显示了使用多个ObjectAnimator，单个ObjectAnimator，以及ViewPropertyAnimator来同时为View的x,y属性设置动画的情形：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ObjectAnimator animX = ObjectAnimator.ofFloat<span class="params">(myView, <span class="string">"x"</span>, <span class="number">50</span>f)</span>;</span><br><span class="line">ObjectAnimator animY = ObjectAnimator.ofFloat<span class="params">(myView, <span class="string">"y"</span>, <span class="number">100</span>f)</span>;</span><br><span class="line">AnimatorSet animSetXY = new AnimatorSet<span class="params">()</span>;</span><br><span class="line">animSetXY.playTogether<span class="params">(animX, animY)</span>;</span><br><span class="line">animSetXY.start<span class="params">()</span>;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PropertyValuesHolder pvhX = PropertyValuesHolder.ofFloat<span class="params">(<span class="string">"x"</span>, <span class="number">50</span>f)</span>;</span><br><span class="line">PropertyValuesHolder pvhY = PropertyValuesHolder.ofFloat<span class="params">(<span class="string">"y"</span>, <span class="number">100</span>f)</span>;</span><br><span class="line">ObjectAnimator.ofPropertyValuesHolder<span class="params">(myView, pvhX, pvyY)</span>.start<span class="params">()</span>;</span><br></pre></td></tr></table></figure>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">myView</span><span class="class">.animate</span>()<span class="class">.x</span>(50<span class="tag">f</span>)<span class="class">.y</span>(100<span class="tag">f</span>);</span><br></pre></td></tr></table></figure>
-<p><strong>注：Property Animation是在API11（android3.0）引人的，如果想兼容API11之前版本，可以使用 <a href="https://github.com/JakeWharton/NineOldAndroids" target="_blank" rel="external">NineOldAndroids</a> 开源框架。</strong></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/08/07/Property-animation/" data-id="cidg2sr0d0000xsb1jkqd888c" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
   
 </section>
         
@@ -686,6 +686,10 @@ dependencies {
       <ul>
         
           <li>
+            <a href="/2015/08/17/Property-animation/">Android Animation--Property Animation</a>
+          </li>
+        
+          <li>
             <a href="/2015/08/14/View-animation/">Android Animation--View animation</a>
           </li>
         
@@ -699,10 +703,6 @@ dependencies {
         
           <li>
             <a href="/2015/08/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
-            <a href="/2015/08/07/Property-animation/">Android Animation--Property Animation</a>
           </li>
         
       </ul>
