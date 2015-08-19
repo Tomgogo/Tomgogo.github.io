@@ -281,6 +281,20 @@
 <li>在动画start()之前要先stop()，不然在第一次动画之后会停在最后一帧，这样动画就只会触发一次。</li>
 <li>最后一点是SDK中提到的，不要在onCreate中调用start，因为AnimationDrawable还没有完全跟Window相关联，如果想要界面显示时就开始动画的话，可以在onWindowFoucsChanged()中调用start()。</li>
 </ol>
+<h2 id="Glide">Glide</h2><p><a href="https://github.com/bumptech/glide" target="_blank" rel="external">Glide</a> 被用来在ImageView 播放gif图，使用也非常简单。</p>
+<p>下面演示在Android studio上使用Glide</p>
+<ul>
+<li>在app/build.gradle文件添加以下代码</li>
+</ul>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">compile</span> <span class="string">'com.github.bumptech.glide:glide:3.6.0'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>在布局文件中如：activity_main.xml中加上imageview布局</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;ImageView</span><br><span class="line">    android:<span class="property">id</span>=<span class="string">"@+id/ivGif"</span></span><br><span class="line">    android:contentDescription=<span class="string">"Gif"</span></span><br><span class="line">    android:layout_width=<span class="string">"wrap_content"</span></span><br><span class="line">    android:layout_height=<span class="string">"wrap_content"</span> /&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加载本地的gif，确保gif资源放在res/raw下。MainActivity中的代码：</p>
+</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">	public <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">Activity</span> &#123;</span></span><br><span class="line">    	<span class="annotation">@Override</span></span><br><span class="line">    	<span class="keyword">protected</span> void onCreate(<span class="type">Bundle</span> savedInstanceState) &#123;</span><br><span class="line">        	<span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        	setContentView(<span class="type">R</span>.layout.activity_main);</span><br><span class="line">	        <span class="comment">// Find the ImageView to display the GIF</span></span><br><span class="line">        	<span class="type">ImageView</span> ivGif = (<span class="type">ImageView</span>) findViewById(<span class="type">R</span>.id.ivGif);</span><br><span class="line">	        <span class="comment">// Display the GIF (from raw resource) into the ImageView	</span></span><br><span class="line">       		 <span class="type">Glide</span>.<span class="keyword">with</span>(<span class="keyword">this</span>).load(<span class="type">R</span>.raw.my_gif).asGif().into(imageView);</span><br><span class="line">            <span class="comment">// OR even download from the network</span></span><br><span class="line">        	<span class="comment">//Glide.with(this).load("https://i.imgur.com/l9lffwf.gif").asGif().into(imageView);</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -616,7 +630,8 @@ dependencies {
     <div class="article-entry" itemprop="articleBody">
       
         <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>Quick Start</p>
+<h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
 <p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
 <h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
 <p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
