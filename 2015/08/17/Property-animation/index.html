@@ -11,10 +11,10 @@
 <meta property="og:url" content="http://yoursite.com/2015/08/17/Property-animation/index.html">
 <meta property="og:site_name" content="Code the world">
 <meta property="og:description" content="属性动画，这个是在Android 3.0中才引进的，与view animation 最大的不同就是，它更改的是对象的实际属性，而View Animation（Tween Animation）中，其改变的是View的绘制效果，真正的View的属性保持不变，比如无论你在对话中如何缩放Button的大小，Button的有效点击区域还是没有应用动画时的区域，其位置与大小都不变。而在Property Ani">
-<meta property="og:image" content="http://yoursite.com/../img/value-animator.png">
-<meta property="og:image" content="http://yoursite.com/../img/animation-linear.png">
-<meta property="og:image" content="http://yoursite.com/../img/animation-nonlinear.png">
-<meta property="og:updated_time" content="2015-08-18T02:01:47.164Z">
+<meta property="og:image" content="http://yoursite.com/img/value-animator.png">
+<meta property="og:image" content="http://yoursite.com/img/animation-linear.png">
+<meta property="og:image" content="http://yoursite.com/img/animation-nonlinear.png">
+<meta property="og:updated_time" content="2015-08-20T01:38:15.484Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android Animation--Property Animation">
 <meta name="twitter:description" content="属性动画，这个是在Android 3.0中才引进的，与view animation 最大的不同就是，它更改的是对象的实际属性，而View Animation（Tween Animation）中，其改变的是View的绘制效果，真正的View的属性保持不变，比如无论你在对话中如何缩放Button的大小，Button的有效点击区域还是没有应用动画时的区域，其位置与大小都不变。而在Property Ani">
@@ -88,11 +88,11 @@
         <p>属性动画，这个是在Android 3.0中才引进的，与view animation 最大的不同就是，它更改的是对象的实际属性，而View Animation（Tween Animation）中，其改变的是View的绘制效果，真正的View的属性保持不变，比如无论你在对话中如何缩放Button的大小，Button的有效点击区域还是没有应用动画时的区域，其位置与大小都不变。而在Property Animation中，改变的是对象的实际属性，如Button的缩放，Button的位置与大小属性值都改变了。而且Property Animation不止可以应用于View，还可以应用于任何对象。Property Animation只是表示一个值在一段时间内的改变，当值改变时要做什么事情完全是你自己决定的。</p>
 <p>在Property Animation中，可以对动画应用以下属性：</p>
 <p>Duration：动画的持续时间<br>TimeInterpolation：属性值的计算方式，如先快后慢<br>TypeEvaluator：根据属性的开始、结束值与TimeInterpolation计算出的因子计算出当前时间的属性值<br>Repeat Count and behavoir：重复次数与方式，如播放3次、5次、无限循环，可以此动画一直重复，或播放完时再反向播放<br>Animation sets：动画集合，即可以同时对一个对象应用几个动画，这些动画可以同时播放也可以对不同动画设置不同开始偏移<br>Frame refreash delay：多少时间刷新一次，即每隔多少时间计算一次属性值，默认为10ms，最终刷新时间还受系统进程调度与硬件的影响</p>
-<h2 id="ValueAnimator">ValueAnimator</h2><p>ValueAnimator  表示一个动画，包含动画的开始值，结束值，持续时间等属性。<br>ValueAnimator封装了一个TimeInterpolator，TimeInterpolator定义了属性值在开始值与结束值之间的插值方法。<br>ValueAnimator还封装了一个TypeAnimator，根据开始、结束值与TimeIniterpolator计算得到的值计算出属性值。<br>ValueAnimator的父类和子类如图：<br><img src="../img/value-animator.png" alt="value-anim">{ImgCap}value-animator.png{/ImgCap}<br>ValuAnimiator只完成了第一步工作，如果要完成第二步，需要实现ValueAnimator.onUpdateListener接口，这个接口只有一个函数onAnimationUpdate()，在这个函数中会传入ValueAnimator对象做为参数，通过这个ValueAnimator对象的getAnimatedValue()函数可以得到当前的属性值如：</p>
+<h2 id="ValueAnimator">ValueAnimator</h2><p>ValueAnimator  表示一个动画，包含动画的开始值，结束值，持续时间等属性。<br>ValueAnimator封装了一个TimeInterpolator，TimeInterpolator定义了属性值在开始值与结束值之间的插值方法。<br>ValueAnimator还封装了一个TypeAnimator，根据开始、结束值与TimeIniterpolator计算得到的值计算出属性值。<br>ValueAnimator的父类和子类如图：<br><img src="/img/value-animator.png" alt="value-anim">{ImgCap}value-animator.png{/ImgCap}<br>ValuAnimiator只完成了第一步工作，如果要完成第二步，需要实现ValueAnimator.onUpdateListener接口，这个接口只有一个函数onAnimationUpdate()，在这个函数中会传入ValueAnimator对象做为参数，通过这个ValueAnimator对象的getAnimatedValue()函数可以得到当前的属性值如：</p>
 <figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ValueAnimator animation = ValueAnimator.ofFloat<span class="params">(<span class="number">0</span>f, <span class="number">1</span>f)</span>;</span><br><span class="line">animation.setDuration<span class="params">(<span class="number">1000</span>)</span>;</span><br><span class="line">animation.addUpdateListener<span class="params">(new AnimatorUpdateListener<span class="params">()</span> &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void onAnimationUpdate<span class="params">(ValueAnimator animation)</span> &#123;</span><br><span class="line">        Log.i<span class="params">(<span class="string">"update"</span>, <span class="params">(<span class="params">(Float)</span> animation.getAnimatedValue<span class="params">()</span>)</span>.toString<span class="params">()</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span>;</span><br><span class="line">animation.setInterpolator<span class="params">(new CycleInterpolator<span class="params">(<span class="number">3</span>)</span>)</span>;</span><br><span class="line">animation.start<span class="params">()</span>;</span><br></pre></td></tr></table></figure>
 <p>对于下图的动画，这个对象的X坐标在40ms内从0移动到40 pixel.按默认的10ms刷新一次，这个对象会移动4次，每次移动40/4=10pixel。</p>
-<p><img src="../img/animation-linear.png" alt="animation1"></p>
-<p>也可以改变属性值的改变方法，即设置不同的interpolation，在下图中运动速度先逐渐增大再逐渐减小<br><img src="../img/animation-nonlinear.png" alt="animation2"></p>
+<p><img src="/img/animation-linear.png" alt="animation1"></p>
+<p>也可以改变属性值的改变方法，即设置不同的interpolation，在下图中运动速度先逐渐增大再逐渐减小<br><img src="/img/animation-nonlinear.png" alt="animation2"></p>
 <ul>
 <li><p>Animator.AnimatorListener</p>
 <ul>
